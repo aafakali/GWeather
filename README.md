@@ -16,7 +16,7 @@ The app provides two main tabs:
 
 ## Features ✅
 
-- **User Registration & Sign-In**  
+- **User Registration & Sign-In Using User Name**  
 - **Current Location** (City and Country from OpenWeather API)  
 - **Current Temperature in Celsius**  
 - **Sunrise and Sunset Times**  
