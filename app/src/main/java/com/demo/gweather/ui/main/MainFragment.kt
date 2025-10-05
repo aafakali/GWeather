@@ -6,6 +6,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.demo.gweather.databinding.FragmentMainBinding
+import com.demo.gweather.ui.history.HistoryFragment
+import com.demo.gweather.utils.PrefManager
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainFragment : Fragment(R.layout.fragment_main) {
@@ -17,13 +19,18 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentMainBinding.bind(view)
 
-        // Set up ViewPager2 adapter
+        val prefManager = PrefManager(requireContext())
+        val username = prefManager.run {
+            if (isLoggedIn()) prefs.getString("username", "Guest") else "Guest"
+        }
+
+        binding.tvUserName.text = username
+
         val adapter = WeatherPagerAdapter(this)
         binding.viewPager.adapter = adapter
 
-        // Attach TabLayout with ViewPager2
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
-            tab.text = if (pos == 0) "Current" else "Forecast"
+            tab.text = if (pos == 0) "Current" else "History"
         }.attach()
     }
 
@@ -32,14 +39,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         _binding = null
     }
 
-    // Adapter for ViewPager2
     class WeatherPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
         override fun getItemCount(): Int = 2
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> CurrentWeatherFragment()
-                else -> CurrentWeatherFragment()
+                else -> HistoryFragment()
             }
         }
     }

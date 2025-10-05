@@ -5,29 +5,30 @@ import android.content.SharedPreferences
 
 class PrefManager(context: Context) {
 
-    companion object {
-        private const val PREF_NAME = "gweather_prefs"
-        private const val KEY_USERNAME = "username"
-        private const val KEY_IS_LOGGED_IN = "is_logged_in"
-    }
-
-    private val prefs: SharedPreferences =
-        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    val prefs: SharedPreferences =
+        context.getSharedPreferences("gweather", Context.MODE_PRIVATE)
 
     fun saveLogin(username: String) {
+        prefs.edit().putString("username", username).putBoolean("logged_in", true).apply()
+    }
+
+    fun isLoggedIn(): Boolean = prefs.getBoolean("logged_in", false)
+
+    fun saveLocation(lat: Double, lon: Double) {
+        prefs.edit().putFloat("lat", lat.toFloat()).putFloat("lon", lon.toFloat()).apply()
+    }
+
+    fun getLatitude(): Double = prefs.getFloat("lat", 0f).toDouble()
+    fun getLongitude(): Double = prefs.getFloat("lon", 0f).toDouble()
+
+    fun saveWeatherData(temp: Double, sunrise: Long, sunset: Long, desc: String) {
         prefs.edit()
-            .putString(KEY_USERNAME, username)
-            .putBoolean(KEY_IS_LOGGED_IN, true)
+            .putFloat("temp", temp.toFloat())
+            .putLong("sunrise", sunrise)
+            .putLong("sunset", sunset)
+            .putString("desc", desc)
             .apply()
     }
 
-    fun getUsername(): String? = prefs.getString(KEY_USERNAME, null)
-
-    fun isLoggedIn(): Boolean = prefs.getBoolean(KEY_IS_LOGGED_IN, false)
-
-    fun logout() {
-        prefs.edit()
-            .clear()
-            .apply()
-    }
+    fun getWeatherDesc(): String = prefs.getString("desc", "") ?: ""
 }
