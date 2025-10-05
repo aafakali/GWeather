@@ -23,6 +23,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         if (prefManager.isLoggedIn()) {
             findNavController().navigate(R.id.action_login_to_main)
             return
+            
         }
 
         binding.btnLogin.setOnClickListener {
